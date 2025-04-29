@@ -1,6 +1,6 @@
 ---
 title: Nützliche YForm-Snippets
-authors: [skerbis,isospin,netzproductions,pschuchmann,rotzek,alxndr-w]
+authors: [skerbis,isospin,netzproductions,pschuchmann,rotzek,alxndr-w,danspringer,christophboecker]
 prio:
 ---
 
@@ -11,6 +11,7 @@ prio:
 - [Table Manager: Spalteninhalt vor Anzeige in Übersicht ändern](#Spalteninhalt)
 - [Table Manager: Bilderspalte in Tabellenansicht (Bild statt Dateiname)](#ytbilder)
 - [Table Manager: Extensionpoint / Listensortierung beeinflussen)](#ytlistsort)
+- [Table Manager: Paginierung auch am Tabellenende](#yform_table_manager_paginierung)
 - [Choice Feld Optionen holen](#Choicefieldoptionen)
 - [YForm Menüpunkt für Redakteure ausblenden](#yform_menu)
 - [Details zum Datensatz nach dem Erstellen erhalten](#yform_created)
@@ -135,12 +136,14 @@ Der Code kommt entweder in die boot Datei des Projekt AddOns oder in die Boot Da
 if (rex::isBackend() && rex_request('table_name') == 'rex_test') {
     // am Extensionpoint YFORM_DATA_LIST einklinken
     rex_extension::register('YFORM_DATA_LIST', function( $ep ) {
+        $fieldName = 'bild';
         // die Liste holen
         $list = $ep->getSubject();
-        // die Spalte bild (ggf. eigenen Spaltennamen verwenden) soll mit einer custom Funktion umformatiert werden
-        $list->setColumnFormat('bild', 'custom', function ($params ) {
+        // die Spalte  soll mit einer custom Funktion umformatiert werden
+        $list->setColumnFormat($fieldName, 'custom', function ($params ) {
             // das passiert hier. Ggf. eigenen Medientyp setzen.
-            return '<img src="/images/rex_medialistbutton_preview/'.$params['list']->getValue('bild').'">';                
+            $mediaUrl = rex_media_manager::getUrl('rex_media_small',$params['list']->getValue($fieldName));
+            return '<img src="'.$mediaUrl.'">';                
         });            
     });        
 }
@@ -179,6 +182,26 @@ if (
 
 ```
 Einfach `<TABLE_NAME>` und `<SOMETHING ELSE>` wie gewünscht austauschen.
+
+<a name="yform_table_manager_paginierung"></a>
+## Table Manager: Paginierung auch am Tabellenende
+In der boot.php des project-Addons oder wo es sonst passt:
+```php
+rex_yform_list::setFactoryClass(RexYformList::class);
+```
+Und im Lib-Verzeichnis diese Klasse:
+```php
+class RexYformList extends rex_yform_list
+{
+    /**
+     * @return string
+     */
+    public function get()
+    {
+        return parent::get() . $this->getPagination();
+    }
+}
+```
 
 
 <a name="Choicefieldoptionen"></a>
