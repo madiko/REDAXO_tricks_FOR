@@ -4,7 +4,7 @@ authors: [eaCe, madiko]
 prio: 
 ---
 
-Letztes Update: 2026-05-01
+Letztes Update: 2026-09-03
 
   
 # Die Anleitung im Überblick
@@ -37,8 +37,8 @@ Füge das Code-Snippet unten ein in die `boot.php` unter
      YForm Tabellen Templates anpassen
      * Autor / copy: Anleitung aus der Doku von YForm
         https://github.com/yakamara/yform/blob/master/docs/07_formbuilder.md#ein-eigenes-template--framework-f%C3%BCr-formularcode-verwenden
-     * last update:  2023-10-11
-     * last review:  2025-11-27
+     * last update:  2026-09-03
+     * last review:  2026-09-03
 **************************************************************************/
 
 rex_yform::addTemplatePath($this->getPath('ytemplates'));
@@ -52,13 +52,14 @@ Springen zur [Anleitung REX 5.15.1 + YForm 4.1.1 + Theme 1.4.0: Angepasstes YTem
 
 ## Anleitung für YForm5: Template
 
->**Hinweis**: getestet mit REDAXO 5.21.0 / YForm 5.0.1 / Theme 1.4.0
+>**Hinweis**: getestet mit REDAXO 5.21.4 / YForm 5.0.2 / Theme 1.4.0
 
 Nun legst Du folgendes Template ab  
 unter `theme/private/ytemplates/bootstrap`  
 mit dem Datei-Namen `value.be_manager_relation.tpl.php`:  
 
->**Hinweis**: Das sollte direkt funktionieren. Falls nicht, lösche unter `System` den `Cache` und versuche es erneut.
+>**Hinweis**: Das sollte direkt funktionieren. Falls nicht, lösche unter `System` den `Cache` und versuche es bitte erneut.
+
 ```
 <?php
 
@@ -73,8 +74,8 @@ mit dem Datei-Namen `value.be_manager_relation.tpl.php`:
      Adaption: eaCe, madiko
      https://friendsofredaxo.github.io/tricks/addons/yform/multiselect_be-relations_no-truncate
      
-     * last update:  2026-04-30
-     * last review:  2026-04-30
+     * last update:  2026-09-03
+     * last review:  2026-09-03
 **************************************************************************/
 
 
@@ -83,18 +84,21 @@ mit dem Datei-Namen `value.be_manager_relation.tpl.php`:
  * @psalm-scope-this rex_yform_value_be_manager_relation
  */
 
+// set main variables (defaults)
 $options ??= [];
 $link ??= '';
 $valueName ??= '';
 
 // get filter
 $filter = [];
-if ($rawFilter = $this->getElement('filter')) {
-    $filter = $this::getFilterArray($rawFilter, $this->params['main_table'], [$this, 'getValueForKey']);
-}
-if (isset($this->params['rex_yform_set'][$this->getName()]) && is_array($this->params['rex_yform_set'][$this->getName()])) {
-    $filter = array_merge($filter, $this->params['rex_yform_set'][$this->getName()]);
-}
+
+    if ($rawFilter = $this->getElement('filter')) {
+        $filter = $this::getFilterArray($rawFilter, $this->params['main_table'], [$this, 'getValueForKey']);
+    }
+
+    if (isset($this->params['rex_yform_set'][$this->getName()]) && is_array($this->params['rex_yform_set'][$this->getName()])) {
+        $filter = array_merge($filter, $this->params['rex_yform_set'][$this->getName()]);
+    }
 
 // adapting selection for options without truncation
 
@@ -141,8 +145,11 @@ if (count($notice) > 0) {
 // deleted code to close and promptly open php 
 
 if ($this->getRelationType() < 2): ?>
+
     <div data-be-relation-wrapper="<?= $this->getFieldName() ?>" class="<?= $class_group ?>" id="<?= $this->getHTMLId() ?>">
+
         <label class="control-label" for="<?= $this->getFieldId() ?>"><?= $this->getLabel() ?></label>
+
         <?php
 
         $attributes = [];
@@ -168,30 +175,15 @@ if ($this->getRelationType() < 2): ?>
                 $select->addOption('', '');
             }
 
-$attributes = $this->getAttributeArray($attributes, ['required', 'readonly', 'disabled']);
-$select->setAttributes($attributes);
+        $attributes = $this->getAttributeArray($attributes, ['required', 'readonly', 'disabled']);
+        $select->setAttributes($attributes);
 
 
-
-    // Leere Option als Standard hinzufügen
-    $select->addOption('', ''); // leere Option mit leerem Wert
-
-    // Nun erst die bestehenden Optionen (oben korrigiert) hinzufügen
-    foreach ($options as $option) {
-        $select->addOption($option['name'], $option['id']);
-    }
-
-    // set default option to empty as long no data was set
-
-        // multiple select
-        if (1== $this->getRelationType()) {
-            $select->setSelected(empty($this->getValue()) ? [] : $this->getValue()); // empty array as long as no value is selected
+        // add options once (no duplicates)
+        foreach ($options as $option) {
+            $select->addOption($option['name'], $option['id']);
         }
 
-        // single select
-        else {
-            $select->setSelected(empty($this->getValue()) ? '' : $this->getValue()); // empty string as long as no value is selected
-        }
 
 // Weiter mit Standard-YForm-Template
 $select->setSelected($this->getValue());
@@ -233,7 +225,6 @@ $e = [];
         <?= $notice ?>
     </div>
 <?php endif; ?>
-
 ```
 
 ---
