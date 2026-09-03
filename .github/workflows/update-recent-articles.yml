@@ -1,0 +1,45 @@
+name: Update recent articles data
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "_docs/**/*.md"
+      - "generate_recent_articles.rb"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Generate recent article data
+        run: ruby generate_recent_articles.rb
+
+      - name: Create pull request for recent article data
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: aktualisiere aktuelle artikel"
+          title: "chore: aktualisiere aktuelle artikel"
+          body: |
+            Automatisch erzeugtes Update der Datei `_data/recent_articles.yml`
+            basierend auf der Git-Historie der Artikel unter `_docs`.
+          branch: "chore/update-recent-articles"
+          delete-branch: true
+          add-paths: |
+            _data/recent_articles.yml

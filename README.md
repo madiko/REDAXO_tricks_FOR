@@ -6,6 +6,8 @@ Diese Website sammelt Lösungen und hilfreiche Code-Beispiele, die es aus versch
 
 ![REDAXO Screenshots](https://raw.githubusercontent.com/redaxo/redaxo/assets/redaxo_02.png)
 
+<div id="recent-articles-placeholder"></div>
+
 ## ✋ Mitmachen
 
 1. __Öffne GitHub-Issues mit neuen Tricks, Ideen oder Anregungen__  
