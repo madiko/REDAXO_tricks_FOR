@@ -7,6 +7,86 @@
   }
 }
 
+.navigation-search {
+  margin: 0 2vw 1.5rem;
+
+  @media (max-width: 639px) {
+    margin-left: 5vw;
+    margin-right: 5vw;
+  }
+}
+
+.navigation-search__label {
+  @include visuallyhidden;
+}
+
+.navigation-search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 -4px;
+}
+
+.navigation-search__input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 2.7rem 0.7rem 2.7rem;
+  border: 1px solid rgba(91, 152, 215, 0.25);
+  border-radius: $ui-radius-pill;
+  background: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 0.95rem;
+
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(91, 152, 215, 0.8);
+    box-shadow: 0 0 0 3px rgba(91, 152, 215, 0.12);
+  }
+}
+
+.navigation-search__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  width: 1rem;
+  height: 1rem;
+  color: rgba(0, 0, 0, 0.45);
+  transform: translateY(-50%);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+}
+
+.navigation-search__empty {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.navigation-search__results {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: $ui-radius;
+  overflow: hidden;
+}
+
+.navigation-search__result-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
 .navigation__list {
   margin: 0;
   padding: 0;
@@ -23,6 +103,14 @@
 
 .navigation__item {
   display: block;
+
+  .navigation > .navigation__list > & {
+    margin-top: 10px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 
   & & {
     .navigation__link,
@@ -96,13 +184,23 @@
   }
 }
 
+.navigation > .navigation__list > .navigation__item > .navigation__link[href$="/dokumentation/"] {
+  margin-top: 2px;
+}
+
 .navigation__toggle {
-  margin-top: 10px;
   font-weight: 600;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+.navigation__label--matched {
+  background: rgba(255, 217, 102, 0.45);
+  box-shadow: $ui-shadow-inset;
+  border-radius: $ui-radius;
+  color: #2f6fae;
 }
 
 .navigation__sub {

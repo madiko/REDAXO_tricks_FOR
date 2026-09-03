@@ -31,20 +31,14 @@
   }
 }
 
-.sidebar__header {
-  position: relative;
-  z-index: 1;
-  height: 60px;
-}
-
 .sidebar__body {
   flex: 1;
   overflow: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 54px 2vw;
+  padding: 78px 2vw 30px;
 
   @include md {
-    padding: 30px 5vw;
+    padding: 78px 5vw 30px;
   }
 }
